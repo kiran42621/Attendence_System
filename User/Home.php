@@ -22,7 +22,7 @@ if($query_solution){
     <?php require '../Common/UserHeader.php'; ?>
     <div class="container-fluid d-flex align-items-end flex-column bd-highlight mb-3">
       <div class="row p-2 bd-highlight">
-        <h3><strong>Welcome <?php echo $_SESSION['username'] ?></strong></h3>
+        <h3><strong>Welcome <?php echo date_default_timezone_set("Asia/Calcutta"); $_SESSION['username'] ?></strong></h3>
       </div>
       <div class="row p-2 bd-highlight">
         <h4>Date : <?php echo date("l jS \of F Y h:i:s A"); ?></h4>
@@ -53,6 +53,14 @@ if($query_solution){
             <th scope="col">Check-Out</th>
           </tr>
         </thead>
+        <tbody>
+          <?php
+          
+           ?>
+          <tr>
+            <td></td>
+          </tr>
+        </tbody>
       </table>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
@@ -61,20 +69,34 @@ if($query_solution){
 <?php
   if (isset($_POST['CheckIn'])) {
     $username = $_SESSION['username'];
+    $userID = $_SESSION['user_id'];
+    date_default_timezone_set("Asia/Calcutta");
+    $date = date("Y/m/d");
+    $time = date("h:i:sa");
     $query = "UPDATE users SET Status = 'Check-In' where Username = '$username'";
     $query_solution = mysqli_query($con, $query);
+    $query2 = "insert into attendence values ('','$userID','$username','$date','$time','')";
+    $query_solution2 = mysqli_query($con, $query2);
     if ($query_solution) {
-      echo "<script>window.location.href = 'Home.php'</script>";
-      echo "<script>alert'CheckIn'</script>";
+      if ($query_solution2) {
+        echo "<script>window.location.href = 'Home.php'</script>";
+      }
     }
   }
   if (isset($_POST['CheckOut'])) {
     $username = $_SESSION['username'];
+    $userID = $_SESSION['user_id'];
+    date_default_timezone_set("Asia/Calcutta");
+    $date = date("Y/m/d");
+    $time = date("h:i:sa");
     $query = "UPDATE users SET Status = 'Check-Out' where Username = '$username'";
     $query_solution = mysqli_query($con, $query);
+    $query2 = "UPDATE attendence SET Checkout = '$time' where Username = '$username' and Date = '$date'";
+    $query_solution2 = mysqli_query($con, $query2);
     if ($query_solution) {
-      echo "<script>window.location.href = 'Home.php'</script>";
-      echo "<script>alert'CheckOut'</script>";
+      if ($query_solution2) {
+        echo "<script>window.location.href = 'Home.php'</script>";
+      }
     }
   }
  ?>
