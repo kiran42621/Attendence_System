@@ -1,6 +1,7 @@
 <?php session_start();
 require '../dbConfig/config.php';
 
+date_default_timezone_set("Asia/Calcutta");
 $uname = $_SESSION['username'];
 $query = "SELECT * FROM users where Username = '$uname'";
 $query_solution = mysqli_query($con, $query);
@@ -22,7 +23,7 @@ if($query_solution){
     <?php require '../Common/UserHeader.php'; ?>
     <div class="container-fluid d-flex align-items-end flex-column bd-highlight mb-3">
       <div class="row p-2 bd-highlight">
-        <h3><strong>Welcome <?php echo date_default_timezone_set("Asia/Calcutta"); $_SESSION['username'] ?></strong></h3>
+        <h3><strong>Welcome <?php echo $_SESSION['username'] ?></strong></h3>
       </div>
       <div class="row p-2 bd-highlight">
         <h4>Date : <?php echo date("l jS \of F Y h:i:s A"); ?></h4>
@@ -55,11 +56,21 @@ if($query_solution){
         </thead>
         <tbody>
           <?php
-          
-           ?>
+          $query = "SELECT * from attendence where Username = '$uname'";
+          $query_solution = mysqli_query($con, $query);
+          if ($query_solution) {
+            while ($rows = mysqli_fetch_array($query_solution)) {
+              ?>
           <tr>
             <td></td>
+            <td><?php echo $rows['Date'] ?></td>
+            <td><?php echo $rows['Check-In'] ?></td>
+            <td><?php echo $rows['Checkout'] ?></td>
           </tr>
+          <?php
+        }
+      }
+       ?>
         </tbody>
       </table>
     </div>
