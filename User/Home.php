@@ -102,7 +102,7 @@ if($query_solution){
     $time = date("h:i:sa");
     $query = "UPDATE users SET Status = 'Check-Out' where Username = '$username'";
     $query_solution = mysqli_query($con, $query);
-    $query2 = "UPDATE attendence SET Checkout = '$time' where Username = '$username' and Date = '$date'";
+    $query2 = "UPDATE attendence SET Checkout = '$time' where Username = '$username' and Date = '$date' and Checkout = '00.00.00'";
     $query_solution2 = mysqli_query($con, $query2);
     if ($query_solution) {
       if ($query_solution2) {
