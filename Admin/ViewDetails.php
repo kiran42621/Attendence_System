@@ -1,4 +1,6 @@
-<?php require '../dbConfig/config.php'; ?>
+<?php require '../dbConfig/config.php';
+$uname = $_GET['name'];
+ ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -13,8 +15,9 @@
       <h4>User : <?php echo $_GET['name'] ?></h4>
       <div class="container-fluid">
         <div class="row">
-          <form class="" action="" method="GET">
+          <form class="" action="ViewDetails.php" method="GET">
           <div class="col-auto">
+            <input type="hidden" name="name" value="<?php echo $_GET['name'] ?>">
             <label for="" class="form-label">Start Date</label>
             <input type="date" name="startdate" value="">
           </div>
@@ -23,7 +26,7 @@
             <input type="date" name="enddate" value="">
           </div>
           <div class="col-auto">
-            <input type="button" class="btn btn-sm btn-primary" name="search" value="Search">
+            <input type="submit" class="btn btn-sm btn-primary" name="search" value="Search">
           </div>
           </form>
         </div>
@@ -39,8 +42,16 @@
         </thead>
         <tbody>
           <?php
-          $uname = $_GET['name'];
-          $query = "SELECT * from attendence where Username = '$uname'";
+          if ($_GET['startdate']) {
+            $uname = $_GET['name'];
+            $startdate = $_GET['startdate'];
+            $enddate = $_GET['enddate'];
+            $query = "SELECT * from attendence where Username = '$uname' AND Date BETWEEN '$startdate' AND '$enddate' ";
+          }
+          else {
+            $uname = $_GET['name'];
+            $query = "SELECT * from attendence where Username = '$uname'";
+          }
           $query_solution = mysqli_query($con, $query);
           if ($query_solution) {
             while ($rows = mysqli_fetch_array($query_solution)) {
@@ -63,8 +74,8 @@
 </html>
 <?php
 if (isset($_POST['search'])) {
-  $startdate = $_POST['startdate'];
-  $enddate = $_POST['enddate'];
+  $startdate = $_GET['startdate'];
+  $enddate = $_GET['enddate'];
   $user = $_GET['name'];
   header("Location: ViewDetails.php?name=$user&sdate=$startdate&edate=$enddate");
   echo "<script>window.location.href = 'ViewDetails.php?name=$user&sdate=$startdate&edate=$enddate'</script>";
