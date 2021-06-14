@@ -10,9 +10,12 @@
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
       </ul>
-      <form class="d-flex" action="index.html" method="post">
+      <form class="d-flex" action="../index.php" method="get">
         <input type="submit" class="btn btn-sm btn-danger" name="logout" value="Logout">
       </form>
     </div>
   </div>
 </nav>
+<?php if (isset($_GET['logout'])) {
+  session_destroy();
+} ?>
