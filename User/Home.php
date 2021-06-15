@@ -2,6 +2,7 @@
 require '../dbConfig/config.php';
 
 $uname = $_SESSION['username'];
+$uid = $_SESSION['user_id'];
 $query = "SELECT * FROM users where Username = '$uname'";
 $query_solution = mysqli_query($con, $query);
 if($query_solution){

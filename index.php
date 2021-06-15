@@ -38,7 +38,7 @@ session_start(); ?>
     else {
       $query = "select * from users where Username = '$username' AND password = '$password'";
       $query_solution = mysqli_query($con, $query);
-
+      $query_solutions = mysqli_query($con, $query);
       if (mysqli_fetch_array($query_solution) > 0) {
         $_SESSION['username'] = $username;
         while ($row = mysqli_fetch_array($query_solution)) {
@@ -47,7 +47,7 @@ session_start(); ?>
         echo "<script>window.location.href = 'User/Home.php'</script>";
       }
       else {
-        echo "<script>alert'Check Username and password !'</script>";
+        echo "<script>alert('Check Username and password !')</script>";
       }
     }
   }

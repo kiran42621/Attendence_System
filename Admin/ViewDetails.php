@@ -38,11 +38,12 @@ $uname = $_GET['name'];
             <th scope="col">Date</th>
             <th scope="col">Check-In</th>
             <th scope="col">Check-Out</th>
+            <th scope="col">Time</th>
           </tr>
         </thead>
         <tbody>
           <?php
-          if ($_GET['startdate']) {
+          if (isset($_GET['startdate'])) {
             $uname = $_GET['name'];
             $startdate = $_GET['startdate'];
             $enddate = $_GET['enddate'];
@@ -61,6 +62,7 @@ $uname = $_GET['name'];
             <td><?php echo $rows['Date'] ?></td>
             <td><?php echo $rows['Check-In'] ?></td>
             <td><?php echo $rows['Checkout'] ?></td>
+              <td><?php echo $rows['TimeDifference'] ?></td>
           </tr>
           <?php
         }
