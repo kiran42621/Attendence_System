@@ -1,7 +1,6 @@
 <?php session_start();
 require '../dbConfig/config.php';
 
-date_default_timezone_set("Asia/Calcutta");
 $uname = $_SESSION['username'];
 $query = "SELECT * FROM users where Username = '$uname'";
 $query_solution = mysqli_query($con, $query);
@@ -10,6 +9,7 @@ if($query_solution){
     $status = $rows['Status'];
   }
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -74,19 +74,20 @@ if($query_solution){
         </tbody>
       </table>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
   </body>
 </html>
 <?php
   if (isset($_POST['CheckIn'])) {
     $username = $_SESSION['username'];
-    $userID = $_SESSION['user_id'];
+    $userID = $uid;
     date_default_timezone_set("Asia/Calcutta");
     $date = date("Y/m/d");
-    $time = date("h:i:sa");
+    $time = date("H:i:sa");
     $query = "UPDATE users SET Status = 'Check-In' where Username = '$username'";
     $query_solution = mysqli_query($con, $query);
-    $query2 = "insert into attendence values ('','$userID','$username','$date','$time','')";
+    $query2 = "insert into attendence values ('','$userID','$username','$date','$time','','')";
     $query_solution2 = mysqli_query($con, $query2);
     if ($query_solution) {
       if ($query_solution2) {
@@ -96,13 +97,31 @@ if($query_solution){
   }
   if (isset($_POST['CheckOut'])) {
     $username = $_SESSION['username'];
-    $userID = $_SESSION['user_id'];
+
+
     date_default_timezone_set("Asia/Calcutta");
     $date = date("Y/m/d");
-    $time = date("h:i:sa");
+    // $time1 = strtotime("08:32:21");
+    $time = date("H:i:s");
+    $querys = "SELECT * FROM attendence where Username = '$username' and Date = '$date' and Checkout = '00.00.00'";
+    $querys_solution = mysqli_query($con, $querys);
+    if ($querys_solution) {
+      while ($row = mysqli_fetch_array($querys_solution)) {
+        $firsttime = $row['Check-In'];
+      }
+    }
+    else {
+      echo "<script>alert('You have not logged out yesterday')</script>";
+    }
+    $time1 = strtotime(date("Y/m/d")." ".$firsttime);
+    $time2 = strtotime(date("Y/m/d")." ".$time);
+    $timediff = abs($time1-$time2);
+    $Hours = floor($timediff/(60*60));
+    $minutes = floor(($timediff/(60))%60);
+    $timeDifference = $Hours.":".$minutes;
     $query = "UPDATE users SET Status = 'Check-Out' where Username = '$username'";
     $query_solution = mysqli_query($con, $query);
-    $query2 = "UPDATE attendence SET Checkout = '$time' where Username = '$username' and Date = '$date' and Checkout = '00.00.00'";
+    $query2 = "UPDATE attendence SET Checkout = '$time' , TimeDifference = '$timeDifference' where Username = '$username' and Date = '$date' and Checkout = '00.00.00'";
     $query_solution2 = mysqli_query($con, $query2);
     if ($query_solution) {
       if ($query_solution2) {
@@ -110,5 +129,4 @@ if($query_solution){
       }
     }
   }
-  
  ?>
