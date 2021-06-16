@@ -41,7 +41,7 @@ session_start(); ?>
       $query_solutions = mysqli_query($con, $query);
       if (mysqli_fetch_array($query_solution) > 0) {
         $_SESSION['username'] = $username;
-        while ($row = mysqli_fetch_array($query_solution)) {
+        while ($row = mysqli_fetch_array($query_solutions)) {
           $_SESSION['user_id'] = $row['ID'];
         }
         echo "<script>window.location.href = 'User/Home.php'</script>";

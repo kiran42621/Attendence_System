@@ -1,6 +1,7 @@
 <?php session_start();
 require '../dbConfig/config.php';
 
+date_default_timezone_set("Asia/Calcutta");
 $uname = $_SESSION['username'];
 $uid = $_SESSION['user_id'];
 $query = "SELECT * FROM users where Username = '$uname'";
@@ -53,6 +54,7 @@ if($query_solution){
             <th scope="col">Date</th>
             <th scope="col">Check-In</th>
             <th scope="col">Check-Out</th>
+            <th scope="col">Time</th>
           </tr>
         </thead>
         <tbody>
@@ -67,6 +69,7 @@ if($query_solution){
             <td><?php echo $rows['Date'] ?></td>
             <td><?php echo $rows['Check-In'] ?></td>
             <td><?php echo $rows['Checkout'] ?></td>
+            <td><?php echo $rows['TimeDifference'] ?></td>
           </tr>
           <?php
         }
@@ -98,23 +101,22 @@ if($query_solution){
   }
   if (isset($_POST['CheckOut'])) {
     $username = $_SESSION['username'];
-
-
     date_default_timezone_set("Asia/Calcutta");
     $date = date("Y/m/d");
     // $time1 = strtotime("08:32:21");
     $time = date("H:i:s");
-    $querys = "SELECT * FROM attendence where Username = '$username' and Date = '$date' and Checkout = '00.00.00'";
+    $querys = "SELECT * FROM attendence where Username = '$username' and Checkout = '00.00.00'";
     $querys_solution = mysqli_query($con, $querys);
     if ($querys_solution) {
       while ($row = mysqli_fetch_array($querys_solution)) {
         $firsttime = $row['Check-In'];
+        $CheckInDate = $row['Date'];
       }
     }
     else {
       echo "<script>alert('You have not logged out yesterday')</script>";
     }
-    $time1 = strtotime(date("Y/m/d")." ".$firsttime);
+    $time1 = strtotime($CheckInDate." ".$firsttime);
     $time2 = strtotime(date("Y/m/d")." ".$time);
     $timediff = abs($time1-$time2);
     $Hours = floor($timediff/(60*60));
@@ -122,7 +124,7 @@ if($query_solution){
     $timeDifference = $Hours.":".$minutes;
     $query = "UPDATE users SET Status = 'Check-Out' where Username = '$username'";
     $query_solution = mysqli_query($con, $query);
-    $query2 = "UPDATE attendence SET Checkout = '$time' , TimeDifference = '$timeDifference' where Username = '$username' and Date = '$date' and Checkout = '00.00.00'";
+    $query2 = "UPDATE attendence SET Checkout = '$time' , TimeDifference = '$timeDifference' where Username = '$username' and Checkout = '00.00.00'";
     $query_solution2 = mysqli_query($con, $query2);
     if ($query_solution) {
       if ($query_solution2) {
